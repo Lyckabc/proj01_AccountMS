@@ -9,6 +9,7 @@
  ****************************************************/
 package com.example.account.dto;
 
+import com.example.account.domain.AccountDto;
 import lombok.*;
 
 import javax.validation.constraints.Min;
@@ -37,6 +38,14 @@ public class CreateAccount {
         private Long userId;
         private String accountNumber;
         private LocalDateTime registeredAt;
+
+        public static Response from(AccountDto accountDto) {
+            return Response.builder()
+                    .userId(accountDto.getUserId())
+                    .accountNumber(accountDto.getAccountNumber())
+                    .registeredAt(accountDto.getRegisteredAt())
+                    .build();
+        }
     }
 }
 
