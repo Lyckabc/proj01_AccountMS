@@ -43,16 +43,18 @@ public class UseBalance {
     @Builder
     public static class Response {
         private String accountNumber;
-        private TransactionResultType TransactionResult;
+        private TransactionResultType transactionResult;
         private String transactionId;
         private Long amount;
         private LocalDateTime transactedAt;
 
-        public static CreateAccount.Response from(AccountDto accountDto) {
-            return CreateAccount.Response.builder()
-                    .userId(accountDto.getUserId())
-                    .accountNumber(accountDto.getAccountNumber())
-                    .registeredAt(accountDto.getRegisteredAt())
+        public static Response from(TransactionDto transactionDto) {
+            return Response.builder()
+                    .accountNumber(transactionDto.getAccountNumber())
+                    .transactionResult(transactionDto.getTransactionResultType())
+                    .transactionId(transactionDto.getTransactionId())
+                    .amount(transactionDto.getAmount())
+                    .transactedAt(transactionDto.getTransactedAt())
                     .build();
         }
     }

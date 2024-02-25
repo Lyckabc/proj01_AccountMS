@@ -11,6 +11,7 @@ package com.example.account.service;
 
 import com.example.account.domain.Account;
 import com.example.account.domain.AccountUser;
+import com.example.account.domain.Transaction;
 import com.example.account.dto.TransactionDto;
 import com.example.account.exception.AccountException;
 import com.example.account.repository.AccountRepository;
@@ -18,13 +19,17 @@ import com.example.account.repository.AccountUserRepository;
 import com.example.account.repository.TransactionRepository;
 import com.example.account.type.AccountStatus;
 import com.example.account.type.ErrorCode;
+import com.example.account.type.TransactionResultType;
+import com.example.account.type.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -41,6 +46,10 @@ public class TransactionService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
         validateUseBalance(user, account, amount);
+
+        account.useBalance(amount);
+
+        return TransactionDto.fromEntity(saveAndGetTransaction(TransactionResultType.S, account, amount));
     }
 
     private void validateUseBalance(AccountUser user, Account account, Long amount) {
@@ -53,6 +62,31 @@ public class TransactionService {
         if(account.getBalance() < amount) {
             throw new AccountException(ErrorCode.AMOUNT_EXCEED_BALNANCE);
         }
+    }
+
+    @Transactional
+    public void saveFailedUseTransaction(String accountNumber, Long amount) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        saveAndGetTransaction(TransactionResultType.F, account, amount);
+    }
+
+    private Transaction saveAndGetTransaction(
+            TransactionResultType transactionResultType,
+            Account account,
+            Long amount) {
+        return transactionRepository.save(
+                Transaction.builder()
+                        .transactionType(TransactionType.USE)
+                        .transactionResultType(transactionResultType)
+                        .account(account)
+                        .amount(amount)
+                        .balanceSnapshot(account.getBalance())
+                        .transactionId(UUID.randomUUID().toString().replace("-", ""))
+                        .transactedAt(LocalDateTime.now())
+                        .build()
+        );
     }
 }
 
