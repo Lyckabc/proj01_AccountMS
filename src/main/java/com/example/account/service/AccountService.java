@@ -24,8 +24,8 @@ import static com.example.account.type.AccountStatus.IN_USE;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountUserRepository accountUserRepository;
+
     /**
-     *
      * 사용자가 있는지 조회
      * 계좌의 번호를 생성하고
      * 계좌를 저장하고, 그 정보를 넘긴다.
@@ -53,14 +53,14 @@ public class AccountService {
     }
 
     private void validateCreateAccount(AccountUser accountUser) {
-        if(accountRepository.countByAccountUser(accountUser) == 10) {
+        if (accountRepository.countByAccountUser(accountUser) == 10) {
             throw new AccountException(ErrorCode.MAX_ACCOUNT_PER_USER_10);
         }
     }
 
     @Transactional
     public Account getAccount(Long id) {
-        if(id < 0){
+        if (id < 0) {
             throw new RuntimeException("Minus");
         }
         return accountRepository.findById(id).get();
@@ -95,6 +95,7 @@ public class AccountService {
         }
     }
 
+    @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
         AccountUser accountUser = accountUserRepository.findById(userId)
                 .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
@@ -106,4 +107,5 @@ public class AccountService {
                 .map(AccountDto::fromEntity)
                 .collect(Collectors.toList());
     }
+}
 
