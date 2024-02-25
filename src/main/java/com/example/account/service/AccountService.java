@@ -39,7 +39,7 @@ public class AccountService {
                 .map(account -> (Integer.parseInt(account.getAccountNumber())) + 1 + "")
                 .orElse("1000000000");
 
-        return AccountDto.formEntity(
+        return AccountDto.fromEntity(
                 accountRepository.save(Account.builder()
                         .accountUser(accountUser)
                         .accountStatus(IN_USE)
@@ -76,7 +76,9 @@ public class AccountService {
         account.setAccountStatus(AccountStatus.UNREGISTERED);
         account.setUnRegisteredAt(LocalDateTime.now());
 
-        return AccountDto.formEntity(account);
+        accountRepository.save(account);
+
+        return AccountDto.fromEntity(account);
     }
 
     private void validateDeleteAccount(AccountUser accountUser, Account account) {
@@ -87,7 +89,7 @@ public class AccountService {
             throw new AccountException(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED);
         }
         if (account.getBalance() > 0) {
-            throw new AccountException(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED);
+            throw new AccountException(ErrorCode.BALANCE_NOT_EMPTY);
         }
     }
 }
