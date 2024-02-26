@@ -11,14 +11,16 @@ package com.example.account.domain;
 
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class AccountDto {
+@SuperBuilder
+public class AccountDto extends BaseEntity{
     private Long userId;
     private String accountNumber;
     private Long balance;
