@@ -4,9 +4,11 @@ import com.example.account.domain.Account;
 import com.example.account.domain.AccountDto;
 import com.example.account.dto.CreateAccount;
 import com.example.account.dto.DeleteAccount;
+import com.example.account.exception.AccountException;
 import com.example.account.type.AccountStatus;
 import com.example.account.service.AccountService;
 import com.example.account.service.RedisTestService;
+import com.example.account.type.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.jni.Local;
@@ -67,6 +69,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.accountNumber").value("1234567890"))
                 .andDo(print());
     }
+
     @Test
     @DisplayName("성공 계좌 삭제")
     void successDeleteAccount() throws Exception {
@@ -81,10 +84,10 @@ class AccountControllerTest {
         //when
         //then
         mockMvc.perform(delete("/account")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new DeleteAccount.Request(3333L, "0987654321")
-                )))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new DeleteAccount.Request(3333L, "0987654321")
+                        )))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1))
                 .andExpect(jsonPath("$.accountNumber").value("1234567890"))
@@ -108,6 +111,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.accountStatus").value("IN_USE"))
                 .andExpect(status().isOk());
     }
+
     @Test
     void successGetAccountsByUserId() throws Exception {
         //given
@@ -115,7 +119,7 @@ class AccountControllerTest {
                 Arrays.asList(
                         AccountDto.builder()
                                 .accountNumber("1234567890")
-                               .balance(1000L).build(),
+                                .balance(1000L).build(),
                         AccountDto.builder()
                                 .accountNumber("1111111111")
                                 .balance(2000L).build(),
@@ -135,5 +139,20 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[1].balance").value(2000))
                 .andExpect(jsonPath("$[2].accountNumber").value("2222222222"))
                 .andExpect(jsonPath("$[2].balance").value(3000));
+    }
+
+    @Test
+    void failGetAccount() throws Exception {
+        //given
+        given(accountService.getAccount(anyLong()))
+                .willThrow(new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        //when
+        //then
+        mockMvc.perform(get("/account/876"))
+                .andDo(print())
+                .andExpect(jsonPath("$.errorCode").value("ACCOUNT_NOT_FOUND"))
+                .andExpect(jsonPath("$.errormessage").value("계좌가 없습니다."))
+                .andExpect(status().isOk());
     }
 }

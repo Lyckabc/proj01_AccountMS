@@ -15,6 +15,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    INTERNAL_SERVER_ERROR("내부서버 오류가 발생했습니다."),
     AMOUNT_EXCEED_BALNANCE("거래금액이 계좌잔액보다 큽니다."),
     INVALID_REQUEST("잘못된 요청입니다."),
     TRNSACTION_NOT_FOUND("해당 거래가 없습니다."),
