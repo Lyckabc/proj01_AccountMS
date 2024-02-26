@@ -31,6 +31,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+import static com.example.account.type.TransactionResultType.*;
+import static com.example.account.type.TransactionType.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,7 +52,7 @@ public class TransactionService {
 
         account.useBalance(amount);
 
-        return TransactionDto.fromEntity(saveAndGetTransaction(TransactionResultType.S, account, amount));
+        return TransactionDto.fromEntity(saveAndGetTransaction(S, account, amount));
     }
 
     private void validateUseBalance(AccountUser user, Account account, Long amount) {
@@ -69,7 +72,7 @@ public class TransactionService {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
-        saveAndGetTransaction(TransactionResultType.F, account, amount);
+        saveAndGetTransaction(F, account, amount);
     }
 
     private Transaction saveAndGetTransaction(
@@ -78,7 +81,7 @@ public class TransactionService {
             Long amount) {
         return transactionRepository.save(
                 Transaction.builder()
-                        .transactionType(TransactionType.USE)
+                        .transactionType(USE)
                         .transactionResultType(transactionResultType)
                         .account(account)
                         .amount(amount)
