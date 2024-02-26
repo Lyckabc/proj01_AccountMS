@@ -18,9 +18,9 @@ import java.time.LocalDateTime;
 
 /**
  * {
- *   "transactionId": asdasdoijakjsdnkajsdh,
- *   "accountNumber": "1000000000",
- *   "amount" : 12345
+ * "transactionId": asdasdoijakjsdnkajsdh,
+ * "accountNumber": "1000000000",
+ * "amount" : 12345
  * }
  */
 
@@ -33,7 +33,7 @@ public class CancelBalance {
         private String transactionId;
 
         @NotBlank
-        @Size(min = 10, max =10)
+        @Size(min = 10, max = 10)
         private String accountNumber;
 
         @NotNull
@@ -41,6 +41,7 @@ public class CancelBalance {
         @Max(1000_000_000)
         private Long amount;
     }
+
     @Getter
     @Setter
     @NoArgsConstructor

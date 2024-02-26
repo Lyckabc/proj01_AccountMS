@@ -41,9 +41,9 @@ public class TransactionController {
         try {
             return UseBalance.Response.from(
                     transactionService.useBalance(request.getUserId(),
-                    request.getAccountNumber(), request.getAmount())
+                            request.getAccountNumber(), request.getAmount())
             );
-        }catch (AccountException e) {
+        } catch (AccountException e) {
             log.error("Failed to use balance. ");
 
             transactionService.saveFailedUseTransaction(
@@ -64,7 +64,7 @@ public class TransactionController {
                     transactionService.cancelBalance(request.getTransactionId(),
                             request.getAccountNumber(), request.getAmount())
             );
-        }catch (AccountException e) {
+        } catch (AccountException e) {
             log.error("Failed to use balance. ");
 
             transactionService.saveFailedCancelTransaction(
