@@ -13,6 +13,7 @@ package com.example.account.dto;
 import com.example.account.controller.TransactionController;
 import com.example.account.domain.AccountDto;
 import com.example.account.type.TransactionResultType;
+import com.example.account.type.TransactionType;
 import lombok.*;
 
 import javax.validation.constraints.*;
@@ -44,6 +45,7 @@ public class UseBalance {
     public static class Response {
         private String accountNumber;
         private TransactionResultType transactionResult;
+        private TransactionType transactionType;
         private String transactionId;
         private Long amount;
         private LocalDateTime transactedAt;
@@ -51,6 +53,7 @@ public class UseBalance {
         public static Response from(TransactionDto transactionDto) {
             return Response.builder()
                     .accountNumber(transactionDto.getAccountNumber())
+                    .transactionType(transactionDto.getTransactionType())
                     .transactionResult(transactionDto.getTransactionResultType())
                     .transactionId(transactionDto.getTransactionId())
                     .amount(transactionDto.getAmount())

@@ -51,7 +51,7 @@ class AccountServiceTest {
                 .willReturn(Optional.of(user));
         given(accountRepository.findFirstByOrderByIdDesc())
                 .willReturn(Optional.of(Account.builder()
-                                .accountNumber("1000000012").build()));
+                        .accountNumber("1000000012").build()));
         given(accountRepository.save(any()))
                 .willReturn(Account.builder()
                         .accountUser(user)
@@ -60,13 +60,14 @@ class AccountServiceTest {
         ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
 
         //when
-        AccountDto accountDto = accountService.createAccount(1L,1000L);
+        AccountDto accountDto = accountService.createAccount(1L, 1000L);
 
         //then
         verify(accountRepository, times(1)).save(captor.capture());
         assertEquals(12L, accountDto.getUserId());
         assertEquals("1000000013", accountDto.getAccountNumber());
     }
+
     @Test
     @DisplayName("계좌 삭제 성공")
     void deleteAccountSuccess() {
@@ -85,7 +86,7 @@ class AccountServiceTest {
         ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
 
         //when
-        AccountDto accountDto = accountService.deleteAccount(1L,"1234567890");
+        AccountDto accountDto = accountService.deleteAccount(1L, "1234567890");
 
         //then
         verify(accountRepository, times(1)).save(captor.capture());
@@ -120,6 +121,7 @@ class AccountServiceTest {
         assertEquals(ErrorCode.USER_ACCOUNT_UN_MATCH, exception.getErrorCode());
 
     }
+
     @Test
     @DisplayName("해지 계좌는 잔액이 없어야 한다.")
     void deleteAccountFailed_balanceNotEmpty() {
@@ -166,6 +168,7 @@ class AccountServiceTest {
         //then
         assertEquals(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED, exception.getErrorCode());
     }
+
     @Test
     @DisplayName("해당 유저 없음 - 계좌 해지 실패")
     void deleteAccount_UserNotFound() {
@@ -180,6 +183,7 @@ class AccountServiceTest {
         //then
         assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
     }
+
     @Test
     @DisplayName("해당 계좌 없음 - 계좌 해지 실패")
     void deleteAccount_AccountNotFound() {
@@ -219,7 +223,7 @@ class AccountServiceTest {
         ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
 
         //when
-        AccountDto accountDto = accountService.createAccount(1L,1000L);
+        AccountDto accountDto = accountService.createAccount(1L, 1000L);
 
         //then
         verify(accountRepository, times(1)).save(captor.capture());
@@ -302,6 +306,7 @@ class AccountServiceTest {
         assertEquals(3000, accountDtos.get(2).getBalance());
 
     }
+
     @Test
     @DisplayName("계좌 가져오기 실패")
     void failedToGetAccounts() {
