@@ -39,8 +39,9 @@ public class TransactionController {
     @AccountLock
     public UseBalance.Response useBalance(
             @Valid @RequestBody UseBalance.Request request
-    ) {
+    ) throws InterruptedException {
         try {
+            Thread.sleep(3000L);
             return UseBalance.Response.from(
                     transactionService.useBalance(request.getUserId(),
                             request.getAccountNumber(), request.getAmount())
@@ -82,8 +83,8 @@ public class TransactionController {
     @GetMapping("/transaction/{transactionId}")
     public QueryTransactionResponse queryTransaction(
             @PathVariable String transactionId) {
-       return QueryTransactionResponse.from(
-               transactionService.queryTransaction(transactionId)
-       );
+        return QueryTransactionResponse.from(
+                transactionService.queryTransaction(transactionId)
+        );
     }
 }

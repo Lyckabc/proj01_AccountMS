@@ -18,18 +18,19 @@ import java.util.stream.Collectors;
 public class AccountController {
     private final AccountService accountService;
 
-    @PostMapping( "/account")
+    @PostMapping("/account")
     public CreateAccount.Response createAccount(
             @RequestBody @Valid CreateAccount.Request request
     ) {
         return CreateAccount.Response.from(
                 accountService.createAccount(
-                    request.getUserId(),
-                    request.getInitialBalance()
+                        request.getUserId(),
+                        request.getInitialBalance()
                 )
         );
     }
-    @DeleteMapping( "/account")
+
+    @DeleteMapping("/account")
     public DeleteAccount.Response deleteAccount(
             @RequestBody @Valid DeleteAccount.Request request
     ) {
@@ -47,16 +48,16 @@ public class AccountController {
     ) {
         return accountService.getAccountsByUserId(userId)
                 .stream().map(accountDto ->
-                AccountInfo.builder()
-                .accountNumber(accountDto.getAccountNumber())
-                .balance(accountDto.getBalance())
-                .build())
+                        AccountInfo.builder()
+                                .accountNumber(accountDto.getAccountNumber())
+                                .balance(accountDto.getBalance())
+                                .build())
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/account/{id}")
     public Account getAccount(
-            @PathVariable Long id){
+            @PathVariable Long id) {
         return accountService.getAccount(id);
     }
 }

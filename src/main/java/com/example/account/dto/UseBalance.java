@@ -30,7 +30,7 @@ public class UseBalance {
         private Long userId;
 
         @NotBlank
-        @Size(min = 10, max =10)
+        @Size(min = 10, max = 10)
         private String accountNumber;
 
         @NotNull
@@ -38,6 +38,7 @@ public class UseBalance {
         @Max(1000000000)
         private Long amount;
     }
+
     @Getter
     @Setter
     @NoArgsConstructor
